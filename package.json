@@ -105,6 +105,11 @@
       "jest": true,
       "es6": true
     },
+    "globals": {
+      "log": true,
+      "LOG_LEVEL": true,
+      "CURRENT_LOG_LEVEL": true
+    },
     "plugins": [
       "redux-saga",
       "react",
@@ -218,10 +223,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "statements": 98,
-        "branches": 91,
-        "functions": 98,
-        "lines": 98
+        "statements": 100,
+        "branches": 100,
+        "functions": 100,
+        "lines": 100
       }
     },
     "moduleDirectories": [
@@ -235,7 +240,8 @@
     "setupTestFrameworkScriptFile": "<rootDir>/internals/testing/test-bundler.js",
     "setupFiles": [
       "raf/polyfill",
-      "<rootDir>/internals/testing/enzyme-setup.js"
+      "<rootDir>/internals/testing/enzyme-setup.js",
+      "<rootDir>/internals/testing/logger-setup.js"
     ],
     "testRegex": "tests/.*\\.test\\.js$"
   },

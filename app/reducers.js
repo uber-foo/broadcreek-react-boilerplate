@@ -5,8 +5,8 @@
 import { combineReducers } from 'redux-immutable';
 import { LOCATION_CHANGE } from 'react-router-redux';
 
-import globalReducer from 'containers/App/reducer';
 import languageProviderReducer from 'containers/LanguageProvider/reducer';
+import broadcreekProviderReducer from 'containers/BroadcreekProvider/reducer';
 
 /*
  * routeReducer
@@ -30,10 +30,11 @@ const routeReducer = combineReducers({ location });
  * Creates the main reducer with the dynamically injected ones
  */
 export default function createReducer(injectedReducers) {
+  log.debug('creating main reducer');
   return combineReducers({
     route: routeReducer,
-    global: globalReducer,
     language: languageProviderReducer,
+    broadcreek: broadcreekProviderReducer,
     ...injectedReducers,
   });
 }
