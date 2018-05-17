@@ -1,5 +1,4 @@
-import { call, put, select, takeLatest } from 'redux-saga/effects';
-import request from 'utils/request';
+import { put, takeLatest } from 'redux-saga/effects';
 
 import {
   connected,
@@ -10,21 +9,21 @@ import {
   CONNECT,
 } from './constants';
 
-import {
-  makeSelectConfig,
-} from './selectors';
-
-export function* connectSaga() {
-  const { url } = yield select(makeSelectConfig());
+export function* connectSaga({ broadcreek }) {
+  const { log } = this;
+  log.debug('running saga');
   try {
-    // TODO actually connect to something
-    yield call(request, url);
+    yield broadcreek.connect();
     yield put(connected());
+    log.debug('saga completed successfully');
   } catch (err) {
+    log.error(err, 'saga failed');
     yield put(connectionError(err));
   }
 }
 
-export default function* sagas() {
-  yield takeLatest(CONNECT, connectSaga);
+export default function createSagaManager(logger) {
+  return function* sagaManager() {
+    yield takeLatest(CONNECT, connectSaga.bind({ log: logger.child({ component: 'connect-saga' }) }));
+  };
 }

@@ -14,7 +14,16 @@ const makeSelectConfig = () => createSelector(
   (broadcreekState) => broadcreekState.get('config')
 );
 
+/**
+ * Select broadcreek status
+ */
+const makeSelectStatus = () => createSelector(
+  selectBroadcreek,
+  (broadcreekState) => broadcreekState.get('status')
+);
+
 export {
   selectBroadcreek,
   makeSelectConfig,
+  makeSelectStatus,
 };
