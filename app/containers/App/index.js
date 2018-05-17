@@ -11,7 +11,7 @@ import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { Switch, Route } from 'react-router-dom';
 
-import BroadcreekProvider from 'containers/BroadcreekProvider';
+import BroadcreekProvider from 'containers/BroadcreekProvider/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 
 const AppWrapper = styled.div`
