@@ -77,7 +77,7 @@ global.LOG_LEVEL = {
 
 global.CURRENT_LOG_LEVEL = LOG_LEVEL.TRACE;
 
-function createLogger(level) {
+function createLogger(level, component) {
   return function log(a, b) {
     // capture timestamp for when log message is serialized
     const occured = new Date();
@@ -116,21 +116,37 @@ function createLogger(level) {
     };
     // output log message to console if at or above current threshold
     if (CURRENT_LOG_LEVEL.value <= level.value) {
-      level.console(`${payload.time.toJSON()} ${level.label}: ${payload.msg}`);
-      if (err) console.dir(err); // eslint-disable-line no-console
-      if (obj) console.dir(obj); // eslint-disable-line no-console
+      level.console(`${payload.time.toJSON()} ${(`     ${level.label}`).slice(-5)} [${component}]: ${payload.msg}`);
+      if (err) console.error(err); // eslint-disable-line no-console
+      else if (obj) console.dir(obj); // eslint-disable-line no-console
     }
     // TODO dispatch log message to remote logging server
   };
 }
 global.log = {
-  fatal: createLogger(LOG_LEVEL.FATAL),
-  error: createLogger(LOG_LEVEL.ERROR),
-  warn: createLogger(LOG_LEVEL.WARN),
-  info: createLogger(LOG_LEVEL.INFO),
-  debug: createLogger(LOG_LEVEL.DEBUG),
-  trace: createLogger(LOG_LEVEL.TRACE),
+  fatal: createLogger(LOG_LEVEL.FATAL, 'root'),
+  error: createLogger(LOG_LEVEL.ERROR, 'root'),
+  warn: createLogger(LOG_LEVEL.WARN, 'root'),
+  info: createLogger(LOG_LEVEL.INFO, 'root'),
+  debug: createLogger(LOG_LEVEL.DEBUG, 'root'),
+  trace: createLogger(LOG_LEVEL.TRACE, 'root'),
 };
+global.log.child = ({ component: childComponent }) => ({
+  fatal: createLogger(LOG_LEVEL.FATAL, childComponent),
+  error: createLogger(LOG_LEVEL.ERROR, childComponent),
+  warn: createLogger(LOG_LEVEL.WARN, childComponent),
+  info: createLogger(LOG_LEVEL.INFO, childComponent),
+  debug: createLogger(LOG_LEVEL.DEBUG, childComponent),
+  trace: createLogger(LOG_LEVEL.TRACE, childComponent),
+  child: ({ component: childComponentInner }) => ({
+    fatal: createLogger(LOG_LEVEL.FATAL, `${childComponent}/${childComponentInner}`),
+    error: createLogger(LOG_LEVEL.ERROR, `${childComponent}/${childComponentInner}`),
+    warn: createLogger(LOG_LEVEL.WARN, `${childComponent}/${childComponentInner}`),
+    info: createLogger(LOG_LEVEL.INFO, `${childComponent}/${childComponentInner}`),
+    debug: createLogger(LOG_LEVEL.DEBUG, `${childComponent}/${childComponentInner}`),
+    trace: createLogger(LOG_LEVEL.TRACE, `${childComponent}/${childComponentInner}`),
+  }),
+});
 
 // Observe loading of Open Sans (to remove open sans, remove the <link> tag in
 // the index.html file and this observer)
