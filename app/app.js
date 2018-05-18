@@ -41,6 +41,9 @@ import { translationMessages } from './i18n';
 // Import CSS reset and Global Styles
 import './global-styles';
 
+// Global constants
+global.MAXIMUM_BROADCREEK_RECONNECT_ATTEMPTS = 3;
+
 // Configure global logger
 global.LOG_LEVEL = {
   FATAL: {

@@ -7396,6 +7396,10 @@ null-loader@0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/null-loader/-/null-loader-0.1.1.tgz#17be9abfcd3ff0e1512f6fc4afcb1f5039378fae"
 
+null-logger-light@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/null-logger-light/-/null-logger-light-0.1.0.tgz#e9265a79ad503ef5f9c26089ec64060fd43195da"
+
 num2fraction@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/num2fraction/-/num2fraction-1.2.2.tgz#6f682b6a027a4e9ddfa4564cd2589d1d4e669ede"

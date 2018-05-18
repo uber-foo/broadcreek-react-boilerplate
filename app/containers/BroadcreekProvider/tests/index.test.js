@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import { browserHistory } from 'react-router-dom';
+import nullLogger from 'null-logger-light';
 
 import configureStore from '../../../configureStore';
 
@@ -24,6 +25,7 @@ describe('<ConnectedBroadcreekProvider />', () => {
 
   beforeAll(() => {
     store = configureStore({}, browserHistory);
+    global.log = nullLogger;
   });
 
 

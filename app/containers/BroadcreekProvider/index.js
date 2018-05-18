@@ -27,12 +27,16 @@ import {
 } from './constants';
 import reducer from './reducer';
 import createSagaManager from './saga';
-import { makeSelectStatus } from './selectors';
+import {
+  makeSelectStatus,
+  makeSelectReconnectAttempt,
+} from './selectors';
 
 export class BroadcreekProvider extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
   componentWillMount() {
     const { log } = BroadcreekProvider;
+    const { props: { reconnectAttempt: attempt } } = this;
     // initialize a new broadcreek client with our logger
     this.broadcreek = new BroadcreekClient({
       logger: log.child({ component: 'broadcreek-client' }),
@@ -44,7 +48,7 @@ export class BroadcreekProvider extends React.PureComponent { // eslint-disable-
       const { props: { onDisconnected, status } } = this;
       if (status !== STATE_DISCONNECTING && status !== STATE_DISCONNECTED) {
         log.warn('broadcreek disconnected unexpetedly, reconnecting');
-        onDisconnected();
+        onDisconnected({ broadcreek: this.broadcreek, attempt });
       }
     });
   }
@@ -54,6 +58,7 @@ export class BroadcreekProvider extends React.PureComponent { // eslint-disable-
     onConnect({ broadcreek });
   }
 
+/*
   componentWillUpdate(nextProps) {
     const { broadcreek } = this;
     const { onConnect, status } = nextProps;
@@ -65,6 +70,7 @@ export class BroadcreekProvider extends React.PureComponent { // eslint-disable-
       default:
     }
   }
+  */
 
   renderInitialConnection() {
     return (
@@ -110,9 +116,31 @@ export class BroadcreekProvider extends React.PureComponent { // eslint-disable-
     );
   }
 
+  renderReconnecting() {
+    return (
+      <div>
+        Reconnecting...
+      </div>
+    );
+  }
+
+  renderMaximumReconnect() {
+    return (
+      <div>
+        Maximum reconnect attempts reached. :(
+      </div>
+    );
+  }
+
   render() {
     const { log } = BroadcreekProvider;
-    const { props: { status } } = this;
+    const { props: { reconnectAttempt, status } } = this;
+    if (reconnectAttempt > 0) {
+      if (reconnectAttempt > MAXIMUM_BROADCREEK_RECONNECT_ATTEMPTS) {
+        return this.renderMaximumReconnect();
+      }
+      return this.renderReconnecting();
+    }
     log.debug('rendering broadcreek provider');
     switch (status) {
       case STATE_NEVER_CONNECTED: return this.renderInitialConnection();
@@ -136,6 +164,7 @@ BroadcreekProvider.propTypes = {
     STATE_DISCONNECTING,
     STATE_DISCONNECTED,
   ]).isRequired,
+  reconnectAttempt: PropTypes.number.isRequired,
   onConnect: PropTypes.func.isRequired,
   onDisconnected: PropTypes.func.isRequired,
 };
@@ -149,6 +178,7 @@ function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   status: makeSelectStatus(),
+  reconnectAttempt: makeSelectReconnectAttempt(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

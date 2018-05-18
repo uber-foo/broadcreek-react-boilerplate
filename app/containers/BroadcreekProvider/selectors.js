@@ -22,8 +22,17 @@ const makeSelectStatus = () => createSelector(
   (broadcreekState) => broadcreekState.get('status')
 );
 
+/**
+ * Select broadcreek reconnect attempt
+ */
+const makeSelectReconnectAttempt = () => createSelector(
+  selectBroadcreek,
+  (broadcreekState) => broadcreekState.get('reconnectAttempt')
+);
+
 export {
   selectBroadcreek,
   makeSelectConfig,
   makeSelectStatus,
+  makeSelectReconnectAttempt,
 };

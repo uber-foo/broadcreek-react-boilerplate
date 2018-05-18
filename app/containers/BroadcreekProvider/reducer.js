@@ -52,7 +52,19 @@ function status(state = STATE_NEVER_CONNECTED, action) {
   }
 }
 
+function reconnectAttempt(state = 0, action) {
+  switch (action.type) {
+    case CONNECTED:
+      return 0;
+    case CONNECTION_ERROR:
+      return state + 1;
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   config,
   status,
+  reconnectAttempt,
 });

@@ -13,8 +13,9 @@ describe('broadcreekProviderReducer', () => {
     expect(broadcreekProviderReducer(undefined, {})).toEqual(fromJS({
       config: {
         url: DEFAULT_BROADCREEK_URL,
-        state: STATE_NEVER_CONNECTED,
       },
+      status: STATE_NEVER_CONNECTED,
+      reconnectAttempt: 0,
     }));
   });
 });

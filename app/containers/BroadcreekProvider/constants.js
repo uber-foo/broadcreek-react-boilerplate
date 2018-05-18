@@ -8,6 +8,7 @@ const scope = 'app/BroadcreekProvider';
 export const CONNECT = `${scope}/CONNECT`;
 export const CONNECTED = `${scope}/CONNECTED`;
 export const CONNECTION_ERROR = `${scope}/CONNECTION_ERROR`;
+export const CONNECTION_FAILED = `${scope}/CONNECTION_FAILED`;
 export const DISCONNECT = `${scope}/DISCONNECT`;
 export const DISCONNECTED = `${scope}/DISCONNECTED`;
 export const STATE_NEVER_CONNECTED = `${scope}/STATE_NEVER_CONNECTED`;

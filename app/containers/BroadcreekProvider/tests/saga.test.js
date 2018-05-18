@@ -8,7 +8,7 @@ import { connected, connectionError } from '../actions';
 import { CONNECT } from '../constants';
 import sagas, { connectSaga } from '../saga';
 
-const url = 'wss://localhost:25710';
+const fauxBroadcreek = { answer: 42 };
 
 /* eslint-disable redux-saga/yield-effects */
 describe('Connect Saga', () => {
@@ -17,25 +17,24 @@ describe('Connect Saga', () => {
   // We have to test twice, once for a successful load and once for an unsuccessful one
   // so we do all the stuff that happens beforehand automatically in the beforeEach
   beforeEach(() => {
-    connectSagaGenerator = connectSaga();
+    connectSagaGenerator = connectSaga({ broadcreek: fauxBroadcreek });
 
     const selectDescriptor = connectSagaGenerator.next().value;
     expect(selectDescriptor).toMatchSnapshot();
 
-    const callDescriptor = connectSagaGenerator.next(url).value;
-    expect(callDescriptor).toMatchSnapshot();
+    const connectDescriptor = connectSagaGenerator.next(0).value;
+    expect(connectDescriptor).toMatchSnapshot();
   });
 
-  it('should dispatch the connected action if it requests the data successfully', () => {
-    const response = [{}];
-    const putDescriptor = connectSagaGenerator.next(response).value;
+  it('should dispatch the connected action if it connects successfully', () => {
+    const putDescriptor = connectSagaGenerator.next().value;
     expect(putDescriptor).toEqual(put(connected()));
   });
 
-  it('should call the connectionError action if the response errors', () => {
+  it('should call the connectionError action if the connection errors', () => {
     const response = new Error('Some error');
     const putDescriptor = connectSagaGenerator.throw(response).value;
-    expect(putDescriptor).toEqual(put(connectionError(response)));
+    expect(putDescriptor).toEqual(put(connectionError({ broadcreek: fauxBroadcreek, attempt: 1 })));
   });
 });
 
