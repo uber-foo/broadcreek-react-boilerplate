@@ -11,18 +11,19 @@ import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
 import { Switch, Route } from 'react-router-dom';
 
+import BroadcreekProvider from 'containers/BroadcreekProvider/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 
 const AppWrapper = styled.div`
-  max-width: calc(768px + 16px * 2);
   margin: 0 auto;
   display: flex;
   min-height: 100%;
-  padding: 0 16px;
+  padding: 0;
   flex-direction: column;
 `;
 
 export default function App() {
+  log.debug('rendering application container');
   return (
     <AppWrapper>
       <Helmet
@@ -31,9 +32,11 @@ export default function App() {
       >
         <meta name="description" content="A Broadcreek React.js Boilerplate application" />
       </Helmet>
-      <Switch>
-        <Route path="" component={NotFoundPage} />
-      </Switch>
+      <BroadcreekProvider>
+        <Switch>
+          <Route path="" component={NotFoundPage} />
+        </Switch>
+      </BroadcreekProvider>
     </AppWrapper>
   );
 }
